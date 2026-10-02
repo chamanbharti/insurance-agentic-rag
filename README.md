@@ -88,3 +88,8 @@ Upcoming:
 uv sync
 uv run uvicorn app.main:app --reload
 ######################
+
+git branch -m checkpoint-01-fastapi main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
