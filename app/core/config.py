@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     ollama_base_url: str = "http://localhost:11434"
     ollama_chat_model: str = "gemma4:12b"
     ollama_embedding_model: str = "nomic-embed-text"
+    embedding_dimension: int = 768
+
+    database_url: str = "postgresql+psycopg://insurance:insurance@localhost:5433/insurance"
 
     model_config = SettingsConfigDict(
         env_file=".env",

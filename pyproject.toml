@@ -7,9 +7,13 @@ requires-python = ">=3.12,<3.13"
 
 dependencies = [
     "fastapi[standard]>=0.115",
+    "ipykernel>=7.4.0",
     "langchain-ollama>=1.1.0",
     "numpy>=2.5.3",
+    "pgvector>=0.5.0",
+    "psycopg[binary]>=3.3.6",
     "pydantic-settings>=2.15.0",
+    "sqlalchemy>=2.1.2",
 ]
 
 [dependency-groups]
