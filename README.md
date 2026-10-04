@@ -93,3 +93,21 @@ git branch -m checkpoint-01-fastapi main
 git fetch origin
 git branch -u origin/main main
 git remote set-head origin -a
+
+## Database
+docker compose down -v
+docker compose up -d
+docker compose ps
+
+docker exec insurance-postgres \
+  psql -U insurance -d insurance \
+  -c "\dt"
+
+docker exec insurance-postgres \
+  psql -U insurance -d insurance \
+  -c "\d documents"
+
+
+docker exec insurance-postgres \
+  psql -U insurance -d insurance \
+  -c "\d document_chunks"

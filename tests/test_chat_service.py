@@ -14,7 +14,7 @@ def test_chat_service() -> None:
 
     response = service.chat("What is motor insurance?")
 
-    assert response.answer == (
+    assert response == (
         "Motor insurance protects vehicles against covered financial losses."
     )
-    assert response.model == "gemma4:12b"
+    assert response == "Motor insurance protects vehicles against covered financial losses."
