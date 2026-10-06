@@ -1,0 +1,115 @@
+[
+  {
+    "id": "motor-cancel-001",
+    "question": "Can I cancel my motor insurance within 15 days?",
+    "expected_sources": [
+      "motor-policy.md",
+      "refund-policy.md"
+    ],
+    "expected_terms": [
+      "15",
+      "cancel"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "motor-refund-001",
+    "question": "Can I get a full refund after cancelling my motor insurance?",
+    "expected_sources": [
+      "refund-policy.md",
+      "motor-policy.md"
+    ],
+    "expected_terms": [
+      "full",
+      "refund",
+      "claim"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "motor-deductible-001",
+    "question": "What is the deductible for a motor insurance claim?",
+    "expected_sources": [
+      "motor-policy.md"
+    ],
+    "expected_terms": [
+      "2,000"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "health-ambulance-001",
+    "question": "How much ambulance coverage is available?",
+    "expected_sources": [
+      "health-policy.md"
+    ],
+    "expected_terms": [
+      "5,000"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "health-waiting-001",
+    "question": "What is the initial waiting period for non-accidental hospitalization?",
+    "expected_sources": [
+      "health-policy.md"
+    ],
+    "expected_terms": [
+      "30",
+      "day"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "health-documents-001",
+    "question": "What documents are needed for a health reimbursement claim?",
+    "expected_sources": [
+      "health-policy.md",
+      "claim-process.md"
+    ],
+    "expected_terms": [
+      "discharge",
+      "bill"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "claim-status-001",
+    "question": "What statuses can an insurance claim have?",
+    "expected_sources": [
+      "claim-process.md"
+    ],
+    "expected_terms": [
+      "REGISTERED",
+      "APPROVED",
+      "REJECTED"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "refund-time-001",
+    "question": "How long does an approved refund normally take?",
+    "expected_sources": [
+      "refund-policy.md"
+    ],
+    "expected_terms": [
+      "7",
+      "business"
+    ],
+    "answerable": true
+  },
+  {
+    "id": "ood-france-001",
+    "question": "What is the capital of France?",
+    "expected_sources": [],
+    "expected_terms": [],
+    "answerable": false
+  },
+  {
+    "id": "ood-java-001",
+    "question": "What is the difference between Java threads and virtual threads?",
+    "expected_sources": [],
+    "expected_terms": [],
+    "answerable": false
+  }
+]

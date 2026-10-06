@@ -9,10 +9,12 @@ from app.models.rag import (
 )
 from app.prompts.rag import SYSTEM_PROMPT
 from app.services.chat import ChatService
+from app.services.context_budget import (
+    apply_context_budget,
+)
 from app.services.context_builder import (
     build_context,
 )
-
 from app.services.retriever import (
     RetrieverService,
 )
@@ -44,8 +46,12 @@ class RagService:
         self,
         question: str,
     ) -> RagResponse:
-        chunks = self._retriever.retrieve(
+        retrieved_chunks = self._retriever.retrieve(
             question
+        )
+
+        chunks = apply_context_budget(
+            retrieved_chunks
         )
 
         if not chunks:
