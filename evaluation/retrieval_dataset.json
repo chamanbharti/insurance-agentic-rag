@@ -111,5 +111,30 @@
     "expected_sources": [],
     "expected_terms": [],
     "answerable": false
-  }
+  },
+
+  {
+  "id": "implicit-deductible-001",
+  "question": "How much do I have to pay myself when my car is damaged?",
+  "expected_sources": [
+    "motor-policy.md"
+  ],
+  "expected_terms": [
+    "2,000"
+  ],
+  "answerable": true
+},
+{
+  "id": "implicit-refund-001",
+  "question": "I bought it yesterday but changed my mind. Can I get my money back?",
+  "expected_sources": [
+    "refund-policy.md",
+    "motor-policy.md"
+  ],
+  "expected_terms": [
+    "15"
+  ],
+  "answerable": true
+}
+
 ]

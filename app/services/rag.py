@@ -46,12 +46,19 @@ class RagService:
         self,
         question: str,
     ) -> RagResponse:
-        retrieved_chunks = self._retriever.retrieve(
-            question
+        retrieval = self._retriever.retrieve(
+        question
+    )
+
+        if not retrieval.accepted:
+            return RagResponse(
+            answer=NO_CONTEXT_ANSWER,
+            sources=[],
+            grounded=False,
         )
 
         chunks = apply_context_budget(
-            retrieved_chunks
+            retrieval.chunks
         )
 
         if not chunks:

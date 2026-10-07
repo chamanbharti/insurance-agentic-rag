@@ -1,6 +1,9 @@
 from langchain_core.messages import BaseMessage
 
-from app.models.rag import RetrievedChunk
+from app.models.rag import (
+    RetrievalResult,
+    RetrievedChunk,
+)
 from app.services.rag import (
     NO_CONTEXT_ANSWER,
     RagService,
@@ -19,8 +22,22 @@ class FakeRetriever:
         question: str,
         top_k: int = 5,
         min_similarity: float = 0.40,
-    ) -> list[RetrievedChunk]:
-        return self._chunks
+    ) -> RetrievalResult:
+        if not self._chunks:
+            return RetrievalResult(
+                chunks=[],
+                accepted=False,
+                reason="NO_CANDIDATES",
+            )
+
+        return RetrievalResult(
+            chunks=self._chunks,
+            accepted=True,
+            reason="ACCEPTED",
+            top_similarity=(
+                self._chunks[0].similarity
+            ),
+        )
 
 
 class FakeChatService:

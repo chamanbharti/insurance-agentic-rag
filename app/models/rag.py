@@ -3,29 +3,25 @@ from pydantic import BaseModel, Field
 
 class RetrievedChunk(BaseModel):
     content: str
-
     source: str
-
     title: str
-
     document_type: str
-
     version: str
-
     chunk_index: int
-
     similarity: float
+
+class RetrievalResult(BaseModel):
+    chunks: list[RetrievedChunk]
+    accepted: bool
+    reason: str
+    top_similarity: float | None = None
 
 
 class RagSource(BaseModel):
     source: str
-
     title: str
-
     version: str
-
     chunk_index: int
-
     similarity: float
 
 
@@ -38,7 +34,5 @@ class RagRequest(BaseModel):
 
 class RagResponse(BaseModel):
     answer: str
-
     sources: list[RagSource]
-
     grounded: bool

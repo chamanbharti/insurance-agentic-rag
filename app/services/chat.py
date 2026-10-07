@@ -6,7 +6,9 @@ from langchain_core.messages import (
     HumanMessage,
 )
 
+from app.core.config import get_settings
 from app.llm.ollama import create_chat_model
+from app.models.chat import ChatResponse
 
 
 class ChatService:
@@ -22,16 +24,22 @@ class ChatService:
     def chat(
         self,
         message: str,
-    ) -> str:
+    ) -> ChatResponse:
+
+        settings = get_settings()
+
         response = self._chat_model.invoke(
             [
                 HumanMessage(
-                    content=message
+                    content=message,
                 )
             ]
         )
 
-        return str(response.content)
+        return ChatResponse(
+            answer=str(response.content), 
+            model=settings.ollama_chat_model,
+            )
 
     def invoke(
         self,

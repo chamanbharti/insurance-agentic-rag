@@ -39,9 +39,10 @@ def evaluate() -> list[RetrievalEvaluationResult]:
     results: list[RetrievalEvaluationResult] = []
 
     for case in dataset:
-        chunks = retriever.retrieve(
+        retrieval = retriever.retrieve(
             case.question
         )
+        chunks = retrieval.chunks
 
         hit = hit_at_k(
             chunks,

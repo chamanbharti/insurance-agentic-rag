@@ -2,7 +2,8 @@ from typing import Protocol
 
 from langchain_core.messages import BaseMessage
 
-from app.models.rag import RetrievedChunk
+# from app.models.rag import RetrievedChunk
+from app.models.rag import RetrievalResult
 
 
 class RetrieverProtocol(Protocol):
@@ -11,7 +12,7 @@ class RetrieverProtocol(Protocol):
         question: str,
         top_k: int = 5,
         min_similarity: float = 0.40,
-    ) -> list[RetrievedChunk]:
+    ) -> RetrievalResult:
         ...
 
 
