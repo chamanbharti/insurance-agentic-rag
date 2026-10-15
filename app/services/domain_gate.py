@@ -1,5 +1,6 @@
 import re
 
+
 INSURANCE_TERMS = {
     "insurance",
     "policy",
@@ -34,7 +35,7 @@ def tokenize(text: str) -> set[str]:
     )
 
 
-def is_insurance_query(
+def has_insurance_terms(
     question: str,
 ) -> bool:
     tokens = tokenize(question)
