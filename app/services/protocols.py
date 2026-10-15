@@ -12,13 +12,11 @@ class RetrieverProtocol(Protocol):
         question: str,
         top_k: int = 5,
         min_similarity: float = 0.40,
-    ) -> RetrievalResult:
-        ...
+    ) -> RetrievalResult: ...
 
 
 class ChatProtocol(Protocol):
     def invoke(
         self,
         messages: list[BaseMessage],
-    ) -> str:
-        ...
+    ) -> str: ...

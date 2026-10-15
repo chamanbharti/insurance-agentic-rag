@@ -6,15 +6,9 @@ def main() -> None:
 
     total = len(results)
 
-    hits = sum(
-        result.hit_at_k
-        for result in results
-    )
+    hits = sum(result.hit_at_k for result in results)
 
-    reciprocal_ranks = sum(
-        result.reciprocal_rank
-        for result in results
-    )
+    reciprocal_ranks = sum(result.reciprocal_rank for result in results)
 
     print()
     print("=" * 80)
@@ -22,20 +16,12 @@ def main() -> None:
     print("=" * 80)
 
     for result in results:
-        status = (
-            "PASS"
-            if result.passed
-            else "FAIL"
-        )
+        status = "PASS" if result.passed else "FAIL"
 
         print()
-        print(
-            f"{status:4} | {result.id}"
-        )
+        print(f"{status:4} | {result.id}")
 
-        print(
-            f"Question: {result.question}"
-        )
+        print(f"Question: {result.question}")
 
         print(
             "Retrieved:",
@@ -55,34 +41,20 @@ def main() -> None:
             ),
         )
 
-    hit_rate = (
-        hits / total
-        if total
-        else 0.0
-    )
+    hit_rate = hits / total if total else 0.0
 
-    mrr = (
-        reciprocal_ranks / total
-        if total
-        else 0.0
-    )
+    mrr = reciprocal_ranks / total if total else 0.0
 
     print()
     print("=" * 80)
     print("SUMMARY")
     print("=" * 80)
 
-    print(
-        f"Cases: {total}"
-    )
+    print(f"Cases: {total}")
 
-    print(
-        f"Hit@K: {hit_rate:.4f}"
-    )
+    print(f"Hit@K: {hit_rate:.4f}")
 
-    print(
-        f"MRR:   {mrr:.4f}"
-    )
+    print(f"MRR:   {mrr:.4f}")
 
 
 if __name__ == "__main__":

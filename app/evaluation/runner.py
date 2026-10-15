@@ -11,24 +11,13 @@ from app.evaluation.retrieval import (
 )
 from app.services.retriever import RetrieverService
 
-DATASET_PATH = Path(
-    "evaluation/retrieval_dataset.json"
-)
+DATASET_PATH = Path("evaluation/retrieval_dataset.json")
 
 
 def load_dataset() -> list[RetrievalEvaluationCase]:
-    raw = json.loads(
-        DATASET_PATH.read_text(
-            encoding="utf-8"
-        )
-    )
+    raw = json.loads(DATASET_PATH.read_text(encoding="utf-8"))
 
-    return [
-        RetrievalEvaluationCase.model_validate(
-            item
-        )
-        for item in raw
-    ]
+    return [RetrievalEvaluationCase.model_validate(item) for item in raw]
 
 
 def evaluate() -> list[RetrievalEvaluationResult]:
@@ -39,9 +28,7 @@ def evaluate() -> list[RetrievalEvaluationResult]:
     results: list[RetrievalEvaluationResult] = []
 
     for case in dataset:
-        retrieval = retriever.retrieve(
-            case.question
-        )
+        retrieval = retriever.retrieve(case.question)
         chunks = retrieval.chunks
 
         hit = hit_at_k(
@@ -57,10 +44,7 @@ def evaluate() -> list[RetrievalEvaluationResult]:
         result = RetrievalEvaluationResult(
             id=case.id,
             question=case.question,
-            retrieved_sources=[
-                chunk.source
-                for chunk in chunks
-            ],
+            retrieved_sources=[chunk.source for chunk in chunks],
             hit_at_k=hit,
             reciprocal_rank=rr,
             passed=hit == 1.0,

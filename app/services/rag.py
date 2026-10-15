@@ -20,9 +20,7 @@ from app.services.retriever import (
 )
 
 NO_CONTEXT_ANSWER = (
-    "I don't have enough information in the "
-    "available insurance documents to answer "
-    "that question."
+    "I don't have enough information in the available insurance documents to answer that question."
 )
 
 
@@ -32,34 +30,24 @@ class RagService:
         retriever: RetrieverService | None = None,
         chat_service: ChatService | None = None,
     ) -> None:
-        self._retriever = (
-            retriever
-            or RetrieverService()
-        )
+        self._retriever = retriever or RetrieverService()
 
-        self._chat_service = (
-            chat_service
-            or ChatService()
-        )
+        self._chat_service = chat_service or ChatService()
 
     def answer(
         self,
         question: str,
     ) -> RagResponse:
-        retrieval = self._retriever.retrieve(
-        question
-    )
+        retrieval = self._retriever.retrieve(question)
 
         if not retrieval.accepted:
             return RagResponse(
-            answer=NO_CONTEXT_ANSWER,
-            sources=[],
-            grounded=False,
-        )
+                answer=NO_CONTEXT_ANSWER,
+                sources=[],
+                grounded=False,
+            )
 
-        chunks = apply_context_budget(
-            retrieval.chunks
-        )
+        chunks = apply_context_budget(retrieval.chunks)
 
         if not chunks:
             return RagResponse(
@@ -68,9 +56,7 @@ class RagService:
                 grounded=False,
             )
 
-        context = build_context(
-            chunks
-        )
+        context = build_context(chunks)
 
         user_prompt = (
             "INSURANCE CONTEXT:\n\n"
@@ -83,12 +69,8 @@ class RagService:
 
         answer = self._chat_service.invoke(
             [
-                SystemMessage(
-                    content=SYSTEM_PROMPT
-                ),
-                HumanMessage(
-                    content=user_prompt
-                ),
+                SystemMessage(content=SYSTEM_PROMPT),
+                HumanMessage(content=user_prompt),
             ]
         )
 
@@ -97,12 +79,8 @@ class RagService:
                 source=chunk.source,
                 title=chunk.title,
                 version=chunk.version,
-                chunk_index=(
-                    chunk.chunk_index
-                ),
-                similarity=(
-                    chunk.similarity
-                ),
+                chunk_index=(chunk.chunk_index),
+                similarity=(chunk.similarity),
             )
             for chunk in chunks
         ]

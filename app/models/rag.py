@@ -10,6 +10,7 @@ class RetrievedChunk(BaseModel):
     chunk_index: int
     similarity: float
 
+
 class RetrievalResult(BaseModel):
     chunks: list[RetrievedChunk]
     accepted: bool

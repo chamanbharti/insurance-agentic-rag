@@ -19,27 +19,16 @@ def test_chat_service() -> None:
     assert response.answer == (
         "Motor insurance protects vehicles against covered financial losses."
     )
-    assert (response.model == get_settings().ollama_chat_model)
+    assert response.model == get_settings().ollama_chat_model
+
 
 def test_chat_service_invoke() -> None:
-    fake_model = FakeListChatModel(
-        responses=[
-            "Grounded insurance answer."
-        ]
-    )
+    fake_model = FakeListChatModel(responses=["Grounded insurance answer."])
 
     service = ChatService(
         chat_model=fake_model,
     )
 
-    response = service.invoke(
-        [
-            HumanMessage(
-                content="Insurance question"
-            )
-        ]
-    )
+    response = service.invoke([HumanMessage(content="Insurance question")])
 
-    assert response == (
-        "Grounded insurance answer."
-    )    
+    assert response == ("Grounded insurance answer.")

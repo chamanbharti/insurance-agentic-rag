@@ -23,6 +23,4 @@ def ask(
 ) -> RagResponse:
     service = RagService()
 
-    return service.answer(
-        request.question
-    )
+    return service.answer(request.question)

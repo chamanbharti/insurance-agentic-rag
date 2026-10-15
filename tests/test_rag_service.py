@@ -34,9 +34,7 @@ class FakeRetriever:
             chunks=self._chunks,
             accepted=True,
             reason="ACCEPTED",
-            top_similarity=(
-                self._chunks[0].similarity
-            ),
+            top_similarity=(self._chunks[0].similarity),
         )
 
 
@@ -57,14 +55,10 @@ class FakeChatService:
 def test_rag_returns_no_context_answer() -> None:
     service = RagService(
         retriever=FakeRetriever([]),  # type: ignore[arg-type]
-        chat_service=FakeChatService(
-            "unused"
-        ),  # type: ignore[arg-type]
+        chat_service=FakeChatService("unused"),  # type: ignore[arg-type]
     )
 
-    response = service.answer(
-        "Unknown question"
-    )
+    response = service.answer("Unknown question")
 
     assert response.answer == NO_CONTEXT_ANSWER
     assert response.grounded is False
@@ -74,10 +68,7 @@ def test_rag_returns_no_context_answer() -> None:
 def test_rag_returns_grounded_answer() -> None:
     chunks = [
         RetrievedChunk(
-            content=(
-                "Motor policies may be cancelled "
-                "within 15 calendar days."
-            ),
+            content=("Motor policies may be cancelled within 15 calendar days."),
             source="motor-policy.md",
             title="Motor Insurance Policy",
             document_type="motor_policy",
@@ -88,28 +79,16 @@ def test_rag_returns_grounded_answer() -> None:
     ]
 
     service = RagService(
-        retriever=FakeRetriever(
-            chunks
-        ),  # type: ignore[arg-type]
-        chat_service=FakeChatService(
-            "Cancellation is allowed within 15 days."
-        ),  # type: ignore[arg-type]
+        retriever=FakeRetriever(chunks),  # type: ignore[arg-type]
+        chat_service=FakeChatService("Cancellation is allowed within 15 days."),  # type: ignore[arg-type]
     )
 
-    response = service.answer(
-        "Can I cancel my policy?"
-    )
+    response = service.answer("Can I cancel my policy?")
 
     assert response.grounded is True
 
-    assert (
-        response.answer
-        == "Cancellation is allowed within 15 days."
-    )
+    assert response.answer == "Cancellation is allowed within 15 days."
 
     assert len(response.sources) == 1
 
-    assert (
-        response.sources[0].source
-        == "motor-policy.md"
-    )
+    assert response.sources[0].source == "motor-policy.md"
