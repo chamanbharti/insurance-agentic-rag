@@ -1,6 +1,6 @@
-from app.services.embedding import EmbeddingService
-from app.repositories.document import DocumentRepository
 from app.db.session import SessionLocal
+from app.repositories.document import DocumentRepository
+from app.services.embedding import EmbeddingService
 
 EVALUATION_CASES = [
     {

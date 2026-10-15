@@ -16,10 +16,7 @@ class ChatService:
         self,
         chat_model: BaseChatModel | None = None,
     ) -> None:
-        self._chat_model = (
-            chat_model
-            or create_chat_model()
-        )
+        self._chat_model = chat_model or create_chat_model()
 
     def chat(
         self,
@@ -37,16 +34,14 @@ class ChatService:
         )
 
         return ChatResponse(
-            answer=str(response.content), 
+            answer=str(response.content),
             model=settings.ollama_chat_model,
-            )
+        )
 
     def invoke(
         self,
         messages: list[BaseMessage],
     ) -> str:
-        response = self._chat_model.invoke(
-            messages
-        )
+        response = self._chat_model.invoke(messages)
 
         return str(response.content)

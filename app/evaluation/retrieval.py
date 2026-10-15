@@ -8,19 +8,10 @@ def hit_at_k(
     if not expected_sources:
         return 1.0 if not chunks else 0.0
 
-    retrieved_sources = {
-        chunk.source
-        for chunk in chunks
-    }
+    retrieved_sources = {chunk.source for chunk in chunks}
 
-    return (
-        1.0
-        if any(
-            source in retrieved_sources
-            for source in expected_sources
-        )
-        else 0.0
-    )
+    return 1.0 if any(source in retrieved_sources for source in expected_sources) else 0.0
+
 
 def reciprocal_rank(
     chunks: list[RetrievedChunk],
@@ -29,9 +20,7 @@ def reciprocal_rank(
     if not expected_sources:
         return 1.0 if not chunks else 0.0
 
-    expected = set(
-        expected_sources
-    )
+    expected = set(expected_sources)
 
     for rank, chunk in enumerate(
         chunks,

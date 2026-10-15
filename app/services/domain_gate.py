@@ -1,6 +1,5 @@
 import re
 
-
 INSURANCE_TERMS = {
     "insurance",
     "policy",
@@ -40,6 +39,4 @@ def has_insurance_terms(
 ) -> bool:
     tokens = tokenize(question)
 
-    return bool(
-        tokens & INSURANCE_TERMS
-    )
+    return bool(tokens & INSURANCE_TERMS)

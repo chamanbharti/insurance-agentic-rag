@@ -34,9 +34,7 @@ def test_hit_at_k_found() -> None:
 
 
 def test_hit_at_k_not_found() -> None:
-    chunks = [
-        chunk("motor-policy.md")
-    ]
+    chunks = [chunk("motor-policy.md")]
 
     result = hit_at_k(
         chunks,
@@ -85,9 +83,7 @@ def test_ood_hit_when_empty() -> None:
 
 
 def test_ood_fails_when_results_exist() -> None:
-    chunks = [
-        chunk("motor-policy.md")
-    ]
+    chunks = [chunk("motor-policy.md")]
 
     assert (
         hit_at_k(

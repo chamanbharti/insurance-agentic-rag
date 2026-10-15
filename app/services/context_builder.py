@@ -22,6 +22,4 @@ def build_context(
 
         sections.append(section)
 
-    return "\n\n---\n\n".join(
-        sections
-    )
+    return "\n\n---\n\n".join(sections)

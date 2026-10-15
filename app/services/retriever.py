@@ -1,13 +1,14 @@
 from app.db.session import SessionLocal
+from app.models.query_decision import QueryDecisionType
 from app.models.rag import (
     RetrievalResult,
     RetrievedChunk,
 )
 from app.repositories.document import DocumentRepository
-from app.services.domain_gate import (
-    is_insurance_query,
-)
 from app.services.embedding import EmbeddingService
+from app.services.query_understanding import (
+    QueryUnderstandingService,
+)
 
 DEFAULT_CANDIDATE_K = 15
 DEFAULT_CONTEXT_K = 4
@@ -20,10 +21,7 @@ class RetrieverService:
         self,
         embedding_service: EmbeddingService | None = None,
     ) -> None:
-        self._embedding_service = (
-            embedding_service
-            or EmbeddingService()
-        )
+        self._embedding_service = embedding_service or EmbeddingService()
 
     def retrieve(
         self,
@@ -32,32 +30,40 @@ class RetrieverService:
         min_similarity: float = DEFAULT_MIN_SIMILARITY,
     ) -> RetrievalResult:
 
-        if not is_insurance_query(question):
-            return RetrievalResult(
-                chunks=[],
-                accepted=False,
-                reason="OUT_OF_DOMAIN",
-            )
+        # if not has_insurance_terms(question):
+        #     return RetrievalResult(
+        #         chunks=[],
+        #         accepted=False,
+        #         reason="OUT_OF_DOMAIN",
+        #     )
 
-        candidates = self._retrieve_candidates(
-            question
+        candidates = self._retrieve_candidates(question)
+
+        # if not candidates:
+        #     return RetrievalResult(
+        #         chunks=[],
+        #         accepted=False,
+        #         reason="NO_CANDIDATES",
+        #     )
+
+        # top_similarity = candidates[0].similarity
+
+        top_similarity = max(chunk.similarity for chunk in candidates) if candidates else None
+
+        decision = QueryUnderstandingService().analyze(
+            question=question,
+            top_similarity=top_similarity,
         )
 
-        if not candidates:
+        if decision.decision != QueryDecisionType.ACCEPT:
             return RetrievalResult(
                 chunks=[],
                 accepted=False,
-                reason="NO_CANDIDATES",
+                reason=decision.reason,
+                top_similarity=top_similarity,
             )
 
-        top_similarity = candidates[0].similarity
-
-        filtered = [
-            chunk
-            for chunk in candidates
-            if chunk.similarity
-            >= min_similarity
-        ]
+        filtered = [chunk for chunk in candidates if chunk.similarity >= min_similarity]
 
         if not filtered:
             return RetrievalResult(
@@ -67,17 +73,13 @@ class RetrieverService:
                 top_similarity=top_similarity,
             )
 
-        deduplicated = self._deduplicate(
-            filtered
-        )
+        deduplicated = self._deduplicate(filtered)
 
         ranked = self._rerank(
             question,
             deduplicated,
         )
-        diverse = self._limit_per_source(
-            ranked
-        )
+        diverse = self._limit_per_source(ranked)
         return RetrievalResult(
             # chunks=ranked[:top_k],
             chunks=diverse[:top_k],
@@ -91,22 +93,14 @@ class RetrieverService:
         question: str,
     ) -> list[RetrievedChunk]:
 
-        query_embedding = (
-            self._embedding_service
-            .embed_query(question)
-        )
+        query_embedding = self._embedding_service.embed_query(question)
 
         with SessionLocal() as session:
-            repository = DocumentRepository(
-                session
-            )
+            repository = DocumentRepository(session)
 
-            results = (
-                repository
-                .similarity_search_with_score(
-                    query_embedding,
-                    limit=DEFAULT_CANDIDATE_K,
-                )
+            results = repository.similarity_search_with_score(
+                query_embedding,
+                limit=DEFAULT_CANDIDATE_K,
             )
 
             candidates: list[RetrievedChunk] = []
@@ -119,9 +113,7 @@ class RetrieverService:
                         content=chunk.content,
                         source=metadata["source"],
                         title=metadata["title"],
-                        document_type=metadata[
-                            "document_type"
-                        ],
+                        document_type=metadata["document_type"],
                         version=metadata["version"],
                         chunk_index=chunk.chunk_index,
                         similarity=1 - distance,
@@ -139,11 +131,7 @@ class RetrieverService:
         result: list[RetrievedChunk] = []
 
         for chunk in chunks:
-            normalized = " ".join(
-                chunk.content
-                .lower()
-                .split()
-            )
+            normalized = " ".join(chunk.content.lower().split())
 
             if normalized in seen:
                 continue
@@ -159,27 +147,17 @@ class RetrieverService:
         chunks: list[RetrievedChunk],
     ) -> list[RetrievedChunk]:
 
-        question_terms = set(
-            question.lower().split()
-        )
+        question_terms = set(question.lower().split())
 
         def score(
             chunk: RetrievedChunk,
         ) -> float:
 
-            content_terms = set(
-                chunk.content.lower().split()
-            )
+            content_terms = set(chunk.content.lower().split())
 
-            overlap = len(
-                question_terms
-                & content_terms
-            )
+            overlap = len(question_terms & content_terms)
 
-            return (
-                chunk.similarity
-                + overlap * 0.01
-            )
+            return chunk.similarity + overlap * 0.01
 
         return sorted(
             chunks,
